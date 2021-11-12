@@ -102,9 +102,10 @@ async function run() {
 
     app.put('/top-users/admin', async (req, res) => {
       const user = req.body;
+      console.log('put', user)
       const filter = {email: user.email}
       const updateDoc = {$set: {role: 'admin'}}
-      const result = await usersCollection.updateOne(filter, updateDoc)
+      const result = await topUsersCollection.updateOne(filter, updateDoc)
       res.json(result)
     })
 
