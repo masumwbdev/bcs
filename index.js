@@ -18,13 +18,30 @@ async function run() {
     await client.connect();
     const database = client.db("baby_care");
     const exploreCollection = database.collection("explore");
+    // const productsCollection = database.collection("products");
+    const reviewsCollection = database.collection("add-reviews");
     const usersCollection = database.collection('users')
     const topUsersCollection = database.collection('top-users')
+
     // explore get
     app.get('/explore', async (req, res) => {
       const cursor = exploreCollection.find({});
       const explore = await cursor.toArray();
       res.send(explore)
+    })
+
+    // reviews get
+    app.get('/add-reviews', async (req, res) => {
+      const cursor = exploreCollection.find({});
+      const review = await cursor.toArray();
+      res.send(review)
+    })
+
+    // reviews post 
+    app.post('/add-reviews', async (req, res) => {
+      const review = req.body;
+      const result = await reviewsCollection.insertOne(review)
+      res.json(result)
     })
 
     app.post('/my-users', async (req, res) => {
@@ -80,6 +97,14 @@ async function run() {
       const options = {upsert: true};
       const updateDoc = {$set: user};
       const result = await topUsersCollection.updateOne(filter, updateDoc, options)
+      res.json(result)
+    })
+
+    app.put('/top-users/admin', async (req, res) => {
+      const user = req.body;
+      const filter = {email: user.email}
+      const updateDoc = {$set: {role: 'admin'}}
+      const result = await usersCollection.updateOne(filter, updateDoc)
       res.json(result)
     })
 
