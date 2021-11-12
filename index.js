@@ -44,6 +44,7 @@ async function run() {
       res.json(result)
     })
 
+    // post my users
     app.post('/my-users', async (req, res) => {
       try{
         const email = req.body.email;
@@ -56,6 +57,7 @@ async function run() {
       }
     })
 
+    // get single item
     app.get('/explore/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
@@ -85,12 +87,25 @@ async function run() {
       res.json(result)
     })
 
+    // top users post
     app.post('/top-users', async(req, res) => {
       const user = req.body;
       const result = await topUsersCollection.insertOne(user);
       res.json(result)
     })
 
+    app.get('/top-users/:email', async(req,res) =>{
+      const email = req.params.email;
+      const query = {email: email};
+      const user = await topUsersCollection.findOne(query);
+      let isAdmin = false;
+      if(user?.role === 'admin'){
+        isAdmin=true;
+      }
+      res.json({admin: isAdmin})
+    })
+
+    // top users put
     app.put('/top-users', async(req, res) => {
       const user = req.body;
       const filter = {email: user.email};
@@ -100,6 +115,7 @@ async function run() {
       res.json(result)
     })
 
+    // top user admin put
     app.put('/top-users/admin', async (req, res) => {
       const user = req.body;
       console.log('put', user)
