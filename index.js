@@ -32,7 +32,7 @@ async function run() {
 
     // reviews get
     app.get('/add-reviews', async (req, res) => {
-      const cursor = exploreCollection.find({});
+      const cursor = reviewsCollection.find({});
       const review = await cursor.toArray();
       res.send(review)
     })
@@ -111,6 +111,7 @@ async function run() {
     // delete api
     app.delete('/my-users/:id', async(req, res) => {
       const id = req.params.id;
+      console.log(id)
       const query = {_id: ObjectId(id)};
       const result = await usersCollection.deleteOne(query);
       res.json(result);
